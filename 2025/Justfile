@@ -1,0 +1,14 @@
+default:
+    just run $(ls -d day* 2>/dev/null | sed 's/day//' | sort -n | tail -1)
+
+format:
+    cargo fmt
+
+check:
+    cargo check
+
+build:
+    cargo build
+
+run day:
+    cargo run -p day{{day}}
