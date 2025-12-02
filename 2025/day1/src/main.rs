@@ -32,7 +32,7 @@ fn problem1() {
             res += 1;
         }
     }
-    println_int(res);
+    println(res as u64);
 }
 
 fn problem2() {
@@ -74,5 +74,5 @@ fn problem2() {
             _ => unreachable!(),
         };
     }
-    println_int(res);
+    println(res as u64);
 }

@@ -30,7 +30,7 @@ fn problem1() {
             }
         }
     }
-    println_int(res);
+    println(res);
 }
 
 fn problem2() {
@@ -62,5 +62,5 @@ fn problem2() {
             }
         }
     }
-    println_int(res);
+    println(res);
 }
