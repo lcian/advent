@@ -49,65 +49,6 @@ pub fn write(fd: u64, s: &str) {
     }
 }
 
-pub fn print<T: Printable>(t: T) {
-    t.print();
-}
-
-pub fn println<T: Printable>(t: T) {
-    t.print();
-    print_inner("\n");
-}
-
-fn print_inner(s: &str) {
-    write(1, s);
-}
-
-pub trait Printable {
-    fn print(&self);
-}
-
-impl Printable for &str {
-    fn print(&self) {
-        print_inner(self);
-    }
-}
-
-impl Printable for u8 {
-    fn print(&self) {
-        let buf = itoa(*self as u64);
-        let s = unsafe { str::from_utf8_unchecked(&buf) }.trim_start_matches("0");
-        let s = if s.is_empty() { "0" } else { s };
-        print_inner(s);
-    }
-}
-
-impl Printable for u32 {
-    fn print(&self) {
-        let buf = itoa(*self as u64);
-        let s = unsafe { str::from_utf8_unchecked(&buf) }.trim_start_matches("0");
-        let s = if s.is_empty() { "0" } else { s };
-        print_inner(s);
-    }
-}
-
-impl Printable for u64 {
-    fn print(&self) {
-        let buf = itoa(*self);
-        let s = unsafe { str::from_utf8_unchecked(&buf) }.trim_start_matches("0");
-        let s = if s.is_empty() { "0" } else { s };
-        print_inner(s);
-    }
-}
-
-impl Printable for usize {
-    fn print(&self) {
-        let buf = itoa(*self as u64);
-        let s = unsafe { str::from_utf8_unchecked(&buf) }.trim_start_matches("0");
-        let s = if s.is_empty() { "0" } else { s };
-        print_inner(s);
-    }
-}
-
 pub fn atoi(s: &str) -> u64 {
     let mut res = 0;
     for d in s.chars() {
@@ -124,3 +65,44 @@ pub fn itoa(mut x: u64) -> [u8; 20] {
     }
     res
 }
+
+fn print_inner(s: &str) {
+    write(1, s);
+}
+
+pub trait Printable {
+    fn print(&self);
+}
+
+pub fn print<T: Printable>(t: T) {
+    t.print();
+}
+
+pub fn println<T: Printable>(t: T) {
+    t.print();
+    print_inner("\n");
+}
+
+impl Printable for &str {
+    fn print(&self) {
+        print_inner(self);
+    }
+}
+
+macro_rules! printable_number {
+    ($T:ty) => {
+        impl Printable for $T {
+            fn print(&self) {
+                let buf = itoa(*self as u64);
+                let s = unsafe { str::from_utf8_unchecked(&buf) }.trim_start_matches("0");
+                let s = if s.is_empty() { "0" } else { s };
+                print_inner(s);
+            }
+        }
+    };
+}
+
+printable_number!(u8);
+printable_number!(u32);
+printable_number!(u64);
+printable_number!(usize);
