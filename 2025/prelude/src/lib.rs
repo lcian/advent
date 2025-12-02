@@ -89,7 +89,7 @@ impl Printable for &str {
     }
 }
 
-macro_rules! printable_number {
+macro_rules! printable_unsigned {
     ($T:ty) => {
         impl Printable for $T {
             fn print(&self) {
@@ -102,7 +102,26 @@ macro_rules! printable_number {
     };
 }
 
-printable_number!(u8);
-printable_number!(u32);
-printable_number!(u64);
-printable_number!(usize);
+macro_rules! printable_signed {
+    ($T:ty) => {
+        impl Printable for $T {
+            fn print(&self) {
+                let x = *self;
+                if x < 0 {
+                    print_inner("-");
+                }
+                (x.abs() as u64).print();
+            }
+        }
+    };
+}
+
+printable_unsigned!(u8);
+printable_unsigned!(u16);
+printable_unsigned!(u32);
+printable_unsigned!(u64);
+printable_unsigned!(usize);
+printable_signed!(i8);
+printable_signed!(i16);
+printable_signed!(i32);
+printable_signed!(i64);
