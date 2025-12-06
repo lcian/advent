@@ -1,8 +1,6 @@
 #![no_std]
 #![no_main]
 
-use core::cmp::Ordering;
-
 use prelude::*;
 prelude!();
 
